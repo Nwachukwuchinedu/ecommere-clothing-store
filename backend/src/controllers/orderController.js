@@ -51,6 +51,16 @@ export async function listOrders(req, res) {
     return res.json(orders)
 }
 
+export async function listMyOrders(req, res) {
+    const { page = 1, limit = 20 } = req.query
+    const filter = { userId: req.user.id }
+    const orders = await Order.find(filter)
+        .sort({ createdAt: -1 })
+        .skip((Number(page) - 1) * Number(limit))
+        .limit(Number(limit))
+    return res.json(orders)
+}
+
 export async function getOrder(req, res) {
     const order = await Order.findById(req.params.id)
     if (!order) return res.status(404).json({ message: 'Not found' })

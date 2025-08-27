@@ -8,11 +8,16 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { addToCart } = useCart();
+  const { addToCart, removeFromCart, items } = useCart();
+  const inCart = items.some(i => i.id === product.id);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
-    addToCart(product);
+    if (inCart) {
+      removeFromCart(product.id);
+    } else {
+      addToCart(product);
+    }
   };
 
   return (
@@ -32,10 +37,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">
           <button
             onClick={handleAddToCart}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center space-x-2"
+            className={`w-full ${inCart ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'} text-white py-2 px-4 rounded-md transition-colors duration-200 flex items-center justify-center space-x-2`}
           >
             <ShoppingCart className="h-4 w-4" />
-            <span>Add to Cart</span>
+            <span>{inCart ? 'Remove from Cart' : 'Add to Cart'}</span>
           </button>
         </div>
       </div>

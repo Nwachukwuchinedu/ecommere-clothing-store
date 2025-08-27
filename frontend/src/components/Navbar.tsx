@@ -12,12 +12,23 @@ const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
 
-  const navLinks = [
+  const baseLinks = [
     { to: '/', label: 'Home' },
     { to: '/shop', label: 'Shop' },
+  ];
+  const publicExtra = [
     { to: '/about', label: 'About' },
     { to: '/contact', label: 'Contact' },
   ];
+  const userLinks = [
+    { to: '/orders', label: 'My Orders' },
+    { to: '/dashboard', label: 'Dashboard' },
+  ];
+  const navLinks = user
+    ? (user.role === 'admin'
+      ? [...baseLinks, { to: '/admin', label: 'Admin' }]
+      : [...baseLinks, ...userLinks])
+    : [...baseLinks, ...publicExtra];
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -46,19 +57,13 @@ const Navbar: React.FC = () => {
                   {link.label}
                 </Link>
               ))}
-              {user && user.role === 'admin' && (
-                <Link to="/admin" className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${isActive('/admin') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
-                  }`}>Admin</Link>
-              )}
+
             </div>
 
             {/* Cart and Mobile Menu */}
             <div className="flex items-center space-x-4">
               {user ? (
-                <>
-                  <span className="text-sm text-gray-700">Hi, {user.fullName.split(' ')[0]}</span>
-                  <button onClick={logout} className="text-sm text-gray-600 hover:text-red-600">Logout</button>
-                </>
+                <></>
               ) : (
                 <Link to="/login" className="text-sm text-gray-700 hover:text-blue-600">Login</Link>
               )}
@@ -102,6 +107,9 @@ const Navbar: React.FC = () => {
                   {link.label}
                 </Link>
               ))}
+              {user && (
+                <button onClick={() => { logout(); setIsMenuOpen(false) }} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-red-600 hover:bg-gray-50">Logout</button>
+              )}
             </div>
           </div>
         )}
