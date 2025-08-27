@@ -1,0 +1,46 @@
+## Workflow
+
+### Branching Strategy
+- `main`: stable, deployable.
+- `dev`: integration branch (optional).
+- Feature branches: `feat/<short-name>`, fixes: `fix/<short-name>`.
+
+### Development
+- Install deps in `frontend`: `npm install`.
+- Run dev server: `npm run dev`.
+- Keep ESLint clean; fix warnings when reasonable.
+
+### Pull Requests
+- Open PRs from feature branches to `dev` (or `main` if no `dev`).
+- Checklist: description, screenshots, and docs alignment.
+  - Reference and, if needed, update `PRD.md` for any product/requirement changes.
+  - Reference and, if needed, update `UI_UX.md` for any UI/UX or component pattern changes.
+  - Note any deviations from `generate.mdc` or `workflow.mdc` and justify.cd
+- Request review; address comments promptly.
+
+### Environments & Config
+- Frontend env: Vite `import.meta.env` for API base URL.
+- Backend env: `MONGO_URI`, `JWT_SECRET`, SMTP creds, `ADMIN_EMAIL`, `CLIENT_URL`.
+- Do not commit `.env` files.
+
+### Documentation Source of Truth
+- Product scope and requirements: `PRD.md` (full‑stack).
+- UI and interaction guidelines: `UI_UX.md`.
+- Code generation and contribution rules: `generate.mdc`.
+- This file (`workflow.mdc`) governs branching, PRs, CI/CD, and environments.
+
+### CI/CD
+- Lint on push; build on PR.
+- Deploy `main` to Vercel (frontend). Backend deploy per service (e.g., Render).
+
+### Releases
+- Tag notable releases; maintain changelog (optional).
+
+### Testing
+- Manual smoke test core flows: nav, add‑to‑cart, signup/login, order.
+- Admin: login, view orders, change status, CRUD products.
+
+### Deployment
+- Frontend: Vercel with SPA rewrite; set `VITE_API_URL` env.
+- Backend: Node/Express app with MongoDB; set required env vars.
+

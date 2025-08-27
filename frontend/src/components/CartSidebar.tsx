@@ -1,6 +1,8 @@
 import React from 'react';
 import { X, Plus, Minus, Trash2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+const API_URL = import.meta.env.VITE_API_URL as string;
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -9,6 +11,32 @@ interface CartSidebarProps {
 
 const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose }) => {
   const { items, updateQuantity, removeFromCart, getTotalPrice, clearCart } = useCart();
+  const { user, token } = useAuth();
+  const placeOrder = async () => {
+    if (!user) {
+      window.location.href = '/login';
+      return;
+    }
+    const invalid = items.find(i => !String(i.id).match(/^[a-fA-F0-9]{24}$/));
+    if (invalid) {
+      alert('Some items are from demo data. Please add products from the Shop (backend) and try again.');
+      return;
+    }
+    const res = await fetch(`${API_URL}/api/orders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({
+        items: items.map(i => ({ productId: i.id, quantity: i.quantity, priceAtOrder: i.price })),
+        subtotal: getTotalPrice()
+      })
+    });
+    if (res.ok) {
+      clearCart();
+      alert('Order placed. Admin has been notified. You will be contacted for payment.');
+    } else {
+      alert('Failed to place order');
+    }
+  }
 
   if (!isOpen) return null;
 
@@ -16,7 +44,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose }) => {
     <>
       {/* Overlay */}
       <div className="fixed inset-0 bg-black bg-opacity-50 z-50" onClick={onClose}></div>
-      
+
       {/* Sidebar */}
       <div className="fixed right-0 top-0 h-full w-96 bg-white shadow-xl z-50 transform transition-transform duration-300">
         <div className="flex flex-col h-full">
@@ -88,10 +116,10 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose }) => {
             <div className="border-t p-6 space-y-4">
               <div className="flex justify-between items-center text-lg font-semibold">
                 <span>Total:</span>
-                <span>${getTotalPrice().toFixed(2)}</span>
+                <span>₦{getTotalPrice().toLocaleString()}</span>
               </div>
-              <button className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium">
-                Checkout
+              <button onClick={placeOrder} className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium">
+                Order
               </button>
               <button
                 onClick={clearCart}

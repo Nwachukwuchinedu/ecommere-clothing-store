@@ -1,0 +1,12 @@
+## Backend Generate Rules
+
+### Conventions
+- Use ES modules. Keep files in `src/` with folders: `models`, `routes`, `middleware`.
+- Validate inputs on all write endpoints.
+
+### Commit & PR
+- Follow Conventional Commits. Reference `frontend/PRD.md` and `frontend/UI_UX.md` when adding/changing endpoints.
+
+### Security
+- Never log secrets. Sanitize logs. Enforce role checks.
+

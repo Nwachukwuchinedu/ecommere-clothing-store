@@ -1,3 +1,8 @@
+# generate.mdc
+# workflow.mdc
+# PRD.md
+# UI_UX.md
+
 # Logs
 logs
 *.log
@@ -23,4 +28,3 @@ dist-ssr
 *.sln
 *.sw?
 .env
-# /

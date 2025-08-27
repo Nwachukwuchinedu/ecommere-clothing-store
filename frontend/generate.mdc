@@ -1,0 +1,40 @@
+## Generate Rules
+
+### Purpose
+Standardize how new code, copy, and assets are generated for MiraHub.
+
+### Naming & Structure
+- Use descriptive, intention‑revealing names (no 1–2 letter variables).
+- Components in `src/components`, pages in `src/pages`, context in `src/context`.
+- Use PascalCase for components, camelCase for variables/functions.
+
+### Code Style
+- TypeScript with explicit function signatures for exports.
+- Prefer early returns; avoid deep nesting; handle errors explicitly.
+- No inline comments explaining obvious logic; write clear code instead.
+- Keep line length reasonable; wrap long JSX props across lines.
+
+### UI Rules
+- Use Tailwind utility classes; avoid ad‑hoc inline styles.
+- Maintain accessible focus states and ARIA where needed.
+- Currency: format as ₦ with thousands separators.
+- Phone: use +234 format in examples and masks.
+
+### Copy & Content
+- Keep tone concise and helpful.
+- Localize for Nigeria where applicable (NGN, addresses, phone).
+ - Ensure UI text aligns with `UI_UX.md`; product flows align with `PRD.md`.
+
+### Commits & PRs
+- Conventional Commits: `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`.
+- Small, focused commits; meaningful messages.
+- PRs include description, screenshots for UI, test notes, and references to updated `PRD.md`/`UI_UX.md` when applicable.
+
+### Security & Privacy
+- Never commit secrets; use environment variables.
+- Sanitize user input; validate on both client and server.
+
+### Documentation Dependencies
+- Before generating new components or endpoints, review `PRD.md` and `UI_UX.md`.
+- If generation introduces a new pattern, update `UI_UX.md` and reference it in the PR.
+

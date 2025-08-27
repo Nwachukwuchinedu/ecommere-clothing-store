@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingCart, Menu, X, Shirt } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import CartSidebar from './CartSidebar';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { getTotalItems } = useCart();
+  const { user, logout } = useAuth();
   const location = useLocation();
 
   const navLinks = [
@@ -27,7 +29,7 @@ const Navbar: React.FC = () => {
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2 text-2xl font-bold text-blue-600">
               <Shirt className="h-8 w-8" />
-              <span>StyleHub</span>
+              <span>MiraHub</span>
             </Link>
 
             {/* Desktop Navigation */}
@@ -36,19 +38,30 @@ const Navbar: React.FC = () => {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                    isActive(link.to)
-                      ? 'text-blue-600 bg-blue-50'
-                      : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
-                  }`}
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${isActive(link.to)
+                    ? 'text-blue-600 bg-blue-50'
+                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    }`}
                 >
                   {link.label}
                 </Link>
               ))}
+              {user && user.role === 'admin' && (
+                <Link to="/admin" className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${isActive('/admin') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                  }`}>Admin</Link>
+              )}
             </div>
 
             {/* Cart and Mobile Menu */}
             <div className="flex items-center space-x-4">
+              {user ? (
+                <>
+                  <span className="text-sm text-gray-700">Hi, {user.fullName.split(' ')[0]}</span>
+                  <button onClick={logout} className="text-sm text-gray-600 hover:text-red-600">Logout</button>
+                </>
+              ) : (
+                <Link to="/login" className="text-sm text-gray-700 hover:text-blue-600">Login</Link>
+              )}
               <button
                 onClick={() => setIsCartOpen(true)}
                 className="relative p-2 text-gray-700 hover:text-blue-600 transition-colors duration-200"
@@ -81,11 +94,10 @@ const Navbar: React.FC = () => {
                   key={link.to}
                   to={link.to}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
-                    isActive(link.to)
-                      ? 'text-blue-600 bg-blue-50'
-                      : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
-                  }`}
+                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${isActive(link.to)
+                    ? 'text-blue-600 bg-blue-50'
+                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    }`}
                 >
                   {link.label}
                 </Link>

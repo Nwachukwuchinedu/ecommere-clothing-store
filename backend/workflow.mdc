@@ -1,0 +1,17 @@
+## Backend Workflow
+
+### Setup
+- `cd backend && npm install && npm run dev`
+- Configure `.env` with MongoDB, JWT, SMTP, ADMIN_EMAIL, CLIENT_URL.
+
+### Branching & PRs
+- Same conventions as frontend `workflow.mdc`.
+- Include Postman/Thunder tests or curl examples in PRs.
+- Reference `frontend/PRD.md` and `frontend/UI_UX.md` for scope alignment.
+
+### Testing
+- Manual tests for auth, products, orders, analytics endpoints.
+
+### Deployment
+- Host on Render/railway; set env vars. Expose `/api/health`.
+

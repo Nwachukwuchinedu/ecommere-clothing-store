@@ -1,12 +1,40 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Truck, Shield, RefreshCw } from 'lucide-react';
 import HeroBanner from '../components/HeroBanner';
 import ProductCard from '../components/ProductCard';
-import { products } from '../data/products';
+import { apiFetch } from '../lib/api';
+import { Product } from '../types';
 
 const Home: React.FC = () => {
-  const trendingProducts = products.slice(0, 8);
+  const [trendingProducts, setTrendingProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const data = await apiFetch('/api/products');
+        const normalized: Product[] = data.slice(0, 8).map((p: any) => ({
+          id: p.id || p._id,
+          name: p.name,
+          category: p.category || 'general',
+          price: Number(p.price) || 0,
+          image: p.image || p.imageUrl || 'https://via.placeholder.com/400x400?text=Product',
+          description: p.description || '',
+          popularity: 0
+        }));
+        setTrendingProducts(normalized);
+      } catch (e) {
+        setError('Failed to load products');
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
   const categories = [
     {
       name: 'Shirts',
@@ -98,9 +126,15 @@ const Home: React.FC = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-            {trendingProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {loading ? (
+              <div className="col-span-4 text-center text-gray-500">Loading…</div>
+            ) : error ? (
+              <div className="col-span-4 text-center text-red-600">{error}</div>
+            ) : (
+              trendingProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            )}
           </div>
           <div className="text-center">
             <Link

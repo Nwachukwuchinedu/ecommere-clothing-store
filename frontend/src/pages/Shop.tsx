@@ -1,18 +1,46 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ProductCard from '../components/ProductCard';
 import FilterSidebar from '../components/FilterSidebar';
-import { products } from '../data/products';
 import { Product } from '../types';
+import { apiFetch } from '../lib/api';
 
 const Shop: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 200]);
   const [sortBy, setSortBy] = useState('popularity');
+  const [serverProducts, setServerProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const data = await apiFetch('/api/products');
+        const normalized: Product[] = data.map((p: any) => ({
+          id: p.id || p._id,
+          name: p.name,
+          category: p.category || 'general',
+          price: Number(p.price) || 0,
+          image: p.image || p.imageUrl || 'https://via.placeholder.com/400x400?text=Product',
+          description: p.description || '',
+          popularity: 0
+        }));
+        setServerProducts(normalized);
+      } catch (e) {
+        setError('Failed to load products');
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
 
   const categories = ['shirts', 'pants', 'dresses', 'shoes'];
 
   const filteredAndSortedProducts = useMemo(() => {
-    let filtered = products.filter((product) => {
+    let filtered = serverProducts.filter((product) => {
       const categoryMatch = selectedCategory === 'all' || product.category === selectedCategory;
       const priceMatch = product.price >= priceRange[0] && product.price <= priceRange[1];
       return categoryMatch && priceMatch;
@@ -34,7 +62,7 @@ const Shop: React.FC = () => {
     });
 
     return filtered;
-  }, [selectedCategory, priceRange, sortBy]);
+  }, [serverProducts, selectedCategory, priceRange, sortBy]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -73,7 +101,11 @@ const Shop: React.FC = () => {
               </p>
             </div>
 
-            {filteredAndSortedProducts.length === 0 ? (
+            {loading ? (
+              <div className="text-center py-12 text-gray-500">Loading products…</div>
+            ) : error ? (
+              <div className="text-center py-12 text-red-600">{error}</div>
+            ) : filteredAndSortedProducts.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
                 <button

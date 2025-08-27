@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <Shirt className="h-8 w-8 text-blue-400" />
-              <span className="text-2xl font-bold">StyleHub</span>
+              <span className="text-2xl font-bold">MiraHub</span>
             </div>
             <p className="text-gray-300 text-sm leading-relaxed">
               Your premier destination for high-quality, stylish clothing. We believe in sustainable fashion that makes you look and feel great.
@@ -62,15 +62,15 @@ const Footer: React.FC = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <MapPin className="h-4 w-4 text-blue-400 flex-shrink-0" />
-                <span className="text-gray-300 text-sm">123 Fashion Ave, Style City, SC 12345</span>
+                <span className="text-gray-300 text-sm">24 Admiralty Way, Lekki, Lagos, Nigeria</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="h-4 w-4 text-blue-400 flex-shrink-0" />
-                <span className="text-gray-300 text-sm">(555) 123-4567</span>
+                <a href="tel:+2348012345678" className="text-gray-300 text-sm">+234 801 234 5678</a>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="h-4 w-4 text-blue-400 flex-shrink-0" />
-                <span className="text-gray-300 text-sm">info@stylehub.com</span>
+                <a href="mailto:hello@mirahub.ng" className="text-gray-300 text-sm">hello@mirahub.ng</a>
               </div>
             </div>
           </div>
@@ -78,9 +78,7 @@ const Footer: React.FC = () => {
 
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-gray-400 text-sm">
-              © 2025 StyleHub. All rights reserved.
-            </p>
+            <p className="text-gray-400 text-sm">© 2025 MiraHub. All rights reserved.</p>
             <div className="flex space-x-6 text-sm">
               <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200">
                 Privacy Policy

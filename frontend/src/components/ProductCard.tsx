@@ -43,14 +43,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
         <p className="text-sm text-gray-500 mb-3 capitalize">{product.category}</p>
         <div className="flex justify-between items-center">
-          <span className="text-xl font-bold text-blue-600">${product.price}</span>
+          <span className="text-xl font-bold text-blue-600">₦{product.price.toLocaleString()}</span>
           <div className="flex items-center">
             {Array.from({ length: 5 }, (_, i) => (
               <span
                 key={i}
-                className={`text-sm ${
-                  i < Math.floor(product.popularity / 2) ? 'text-yellow-400' : 'text-gray-300'
-                }`}
+                className={`text-sm ${i < Math.floor(product.popularity / 2) ? 'text-yellow-400' : 'text-gray-300'
+                  }`}
               >
                 ★
               </span>
